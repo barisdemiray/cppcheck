@@ -31,6 +31,7 @@ private:
         TEST_CASE(simplify_path);
         TEST_CASE(accept_file);
         TEST_CASE(getRelative);
+        TEST_CASE(getCurrentPath);
         TEST_CASE(isAbsolute);
         TEST_CASE(is_c);
         TEST_CASE(is_cpp);
@@ -93,6 +94,10 @@ private:
         ASSERT_EQUALS("foo/y.c", Path::getRelativePath("C:/bar/foo/y.c", basePaths));
         ASSERT_EQUALS("C:/test.cpp", Path::getRelativePath("C:/test.cpp", basePaths));
         ASSERT_EQUALS("C:/foobar/test.cpp", Path::getRelativePath("C:/foobar/test.cpp", basePaths));
+    }
+
+    void getCurrentPath() const {
+        ASSERT_EQUALS(true, Path::isAbsolute(Path::getCurrentPath()));
     }
 
     void isAbsolute() const {
