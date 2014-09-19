@@ -41,9 +41,9 @@ bool PathMatch::Match(const std::string &path) const
         if (Path::isAbsolute(mask)) {
             static const std::string& workingDirectory = Path::getCurrentPath();
 
-            size_t workingDirectoryIndex = mask.find(workingDirectory);
+            const std::size_t workingDirectoryIndex = mask.find(workingDirectory);
             if (workingDirectoryIndex != std::string::npos) {
-                mask.erase(mask.find(workingDirectory), workingDirectory.length() + 1);
+                mask.erase(workingDirectoryIndex, workingDirectory.length() + 1);
             }
         }
 
