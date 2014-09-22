@@ -209,6 +209,7 @@ private:
     void arrayIndexOutOfBoundsError(const std::list<const Token *> &callstack, const ArrayInfo &arrayInfo, const std::vector<MathLib::bigint> &index);
     void bufferOverrunError(const Token *tok, const std::string &varnames = emptyString);
     void bufferOverrunError(const std::list<const Token *> &callstack, const std::string &varnames = emptyString);
+    void strlenUsageError(const Token *tok, const std::string& error);
     void strncatUsageError(const Token *tok);
     void negativeMemoryAllocationSizeError(const Token *tok); // provide a negative value to memory allocation function
     void outOfBoundsError(const Token *tok, const std::string &what, const bool show_size_info, const MathLib::bigint &supplied_size, const MathLib::bigint &actual_size);

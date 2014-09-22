@@ -120,10 +120,14 @@ void CheckBufferOverrun::bufferOverrunError(const Token *tok, const std::string 
     reportError(tok, Severity::error, "bufferAccessOutOfBounds", bufferOverrunMessage(varnames));
 }
 
-
 void CheckBufferOverrun::bufferOverrunError(const std::list<const Token *> &callstack, const std::string &varnames)
 {
     reportError(callstack, Severity::error, "bufferAccessOutOfBounds", bufferOverrunMessage(varnames));
+}
+
+void CheckBufferOverrun::strlenUsageError(const Token *tok, const std::string& error)
+{
+    reportError(tok, Severity::error, "strlenUsageError", error);
 }
 
 void CheckBufferOverrun::possibleBufferOverrunError(const Token *tok, const std::string &src, const std::string &dst, bool cat)
@@ -1525,6 +1529,14 @@ void CheckBufferOverrun::checkBufferAllocatedWithStrlen()
                 dstVarId = tok->varId();
                 srcVarId = tok->tokAt(8)->varId();
                 tok      = tok->tokAt(10);
+            } else if (Token::Match(tok, "strlen ( & %var% )")) {
+                // Ticket #4241 Address of single character being passed as a string
+                // Compilers may not complain for "char c; strlen(&c);"
+                srcVarId = tok->tokAt(3)->varId();
+                if (symbolDatabase->getVariableFromVarId(srcVarId)->isPointer())
+                    strlenUsageError(tok, "Passing a pointer to a pointer to strlen() is not valid");
+                else
+                    strlenUsageError(tok, "Passing the address of a non-pointer variable to strlen() is not valid");
             } else
                 continue;
 

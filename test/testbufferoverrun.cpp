@@ -2491,6 +2491,19 @@ private:
               "  delete a;\n"
               "}");
         ASSERT_EQUALS("[test.cpp:3]: (error) Buffer is accessed out of bounds.\n", errout.str());
+
+        // Ticket #4241 Address of single character being passed as a string
+        check("void f() {\n"
+              "  char c = 'x';\n"
+              "  const int sizeC = strlen(&c);\n"
+              "}\n");
+        ASSERT_EQUALS("[test.cpp:3]: (error) Passing the address of a non-pointer variable to strlen() is not valid\n", errout.str());
+
+        check("void f() {\n"
+              "  char * str = \"test\";\n"
+              "  const int sizeStr = strlen(&str);\n"
+              "}\n");
+        ASSERT_EQUALS("[test.cpp:3]: (error) Passing a pointer to a pointer to strlen() is not valid\n", errout.str());
     }
 
     void buffer_overrun_13() {
