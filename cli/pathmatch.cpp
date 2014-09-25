@@ -38,8 +38,14 @@ bool PathMatch::Match(const std::string &path) const
         std::string mask(*iterMask);
 
         // Convert the mask into a relative path to current working directory
-        if (Path::isAbsolute(mask))
-            mask.erase(0, (int)Path::getCurrentPath().length() + 1);
+        if (Path::isAbsolute(mask)) {
+            static const std::string& workingDirectory = Path::getCurrentPath();
+
+            size_t workingDirectoryIndex = mask.find(workingDirectory);
+            if (workingDirectoryIndex != std::string::npos) {
+                mask.erase(mask.find(workingDirectory), workingDirectory.length() + 1);
+            }
+        }
 
         std::string findpath(path);
         if (!_caseSensitive)

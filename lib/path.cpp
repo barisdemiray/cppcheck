@@ -200,14 +200,14 @@ const std::string Path::getCurrentPath()
 
 bool Path::isAbsolute(const std::string& path)
 {
-    std::string nativePath = toNativeSeparators(path);
+    const std::string& nativePath = toNativeSeparators(path);
 
 #ifdef _WIN32
     if (path.length() < 2)
         return false;
 
     // On Windows, 'C:\foo\bar' is an absolute path, while 'C:foo\bar' is not
-    if (nativePath.compare(0, 2, "\\\\") == 0 || (isalpha(nativePath[0]) != 0 && nativePath.compare(1, 2, ":\\") == 0))
+    if (nativePath.compare(0, 2, "\\\\") == 0 || (std::isalpha(nativePath[0]) != 0 && nativePath.compare(1, 2, ":\\") == 0))
         return true;
 #else
     if (nativePath[0] == '/')
